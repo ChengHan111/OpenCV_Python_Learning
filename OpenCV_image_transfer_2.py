@@ -40,7 +40,7 @@ plt.show()
 '''图像平移'''
 # cv.warpAffine(img,M,dsize) where M is a (2x3) numpy array, dsize is the size of the output image
 rows,cols = img1.shape[:2]
-M = M = np.float32([[1,0,100],[0,1,50]])# 平移矩阵 100在x方向, 50在y方向
+M = np.float32([[1,0,100],[0,1,50]])# 平移矩阵 100在x方向, 50在y方向
 dst = cv.warpAffine(img1,M,(cols,rows)) #注意先col 后row
 
 fig,axes=plt.subplots(nrows=1,ncols=2,figsize=(10,8),dpi=100)
