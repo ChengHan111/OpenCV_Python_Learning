@@ -17,30 +17,35 @@ print(cv.__file__)
 # minSize和maxSize：目标的最小尺寸和最大尺寸
 
 import matplotlib.pyplot as plt
-# img = cv.imread('wulin.jpeg')
-# gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-#
-# face_cas = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
-# face_cas.load('haarcascade_frontalface_default.xml')
-#
-# eyes_cas = cv.CascadeClassifier('haarcascade_eye.xml')
-# eyes_cas.load('haarcascade_eye.xml')
-#
-# faceRects = face_cas.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=3, minSize=(23,23))
-# for faceRect in faceRects:
-#     x,y,w,h = faceRect
-#     # 框出人脸
-#     cv.rectangle(img, (x,y), (x + w, y + h), (0,255,0), 3)
-#     # 再框出人脸之后再进行眼睛检测
-#     roi_color = img[y:y+h, x:x+w]
-#     roi_gray = gray[y:y + h, x:x + w]
-#     eyes = eyes_cas.detectMultiScale(roi_gray)
-#     for (ex, ey, ew, eh) in eyes:
-#         cv.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0,255,0), 2)
-# plt.figure(figsize=(8,6),dpi=100)
-# plt.imshow(img[:,:,::-1])
-# plt.show()
+img = cv.imread('wulin.jpeg')
+gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
+face_cas = cv.CascadeClassifier('haarcascade_frontalface_default.xml')
+face_cas.load('haarcascade_frontalface_default.xml')
+
+eyes_cas = cv.CascadeClassifier('haarcascade_eye.xml')
+eyes_cas.load('haarcascade_eye.xml')
+
+faceRects = face_cas.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=3, minSize=(23,23))
+for faceRect in faceRects:
+    x,y,w,h = faceRect
+    # 框出人脸
+    cv.rectangle(img, (x,y), (x + w, y + h), (0,255,0), 3)
+    # 再框出人脸之后再进行眼睛检测
+    '''注意这里是先圈的y再圈的x, roi_interest'''
+    # 这是因为在opencv中，img协调序列是y坐标，然后是x坐标!!!! Important
+    roi_color = img[y:y+h, x:x+w]
+    roi_gray = gray[y:y + h, x:x + w]
+    eyes = eyes_cas.detectMultiScale(roi_gray)
+    for (ex, ey, ew, eh) in eyes:
+        cv.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0,255,0), 2)
+plt.figure(figsize=(8,6),dpi=100)
+plt.imshow(img[:,:,::-1])
+plt.show()
+
+'''
+在视频中的应用
+'''
 cap = cv.VideoCapture('video.mp4')
 while(cap.isOpened()):
     ret, frame = cap.read()
